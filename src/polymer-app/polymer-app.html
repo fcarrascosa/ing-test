@@ -1,0 +1,99 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../components/polymer/polymer-amount-currency.html">
+<link rel="import" href="../components/lit/lit-amount-currency.html">
+
+<dom-module id="polymer-app">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+    </style>
+    <div class="main">
+      From:
+      <polymer-amount-currency amount="[[fromAmount]]" currency="[[fromCurrency]]" on-value-changed="handleFromValue"></polymer-amount-currency>
+
+      To:
+      <lit-amount-currency amount="[[toAmount]]" currency="[[toCurrency]]" on-value-changed="handleToValue"></lit-amount-currency>
+    </div>
+
+  </template>
+
+  <script>
+    /**
+     * @customElement
+     * @polymer
+     */
+    class PolymerApp extends Polymer.Element {
+      static get is() { return 'polymer-app'; }
+      static get properties() {
+        return {
+          possibleRates: {
+            type: Array,
+            value: [],
+          },
+          fromAmount: {
+            type: Number,
+            value: 0
+          },
+          fromCurrency: {
+            type: String,
+            value: 'EUR'
+          },
+          toAmount: {
+            type: Number,
+            value: 0
+          },
+          toCurrency: {
+            type: String,
+            value: 'EUR',
+          },
+          exchangeRate: {
+            type: Number,
+            value: 1,
+          }
+        };
+      }
+
+      handleFromValue(e) {
+        this.set('fromAmount', e.detail.amount || 0);
+        this.set('fromCurrency', e.detail.currency);
+
+        this.handleCurrencyChange();
+      }
+
+      handleToValue(e) {
+        this.set('toCurrency', e.detail.currency);
+
+        this.handleCurrencyChange();
+      }
+
+      ready() {
+        super.ready();
+
+        fetch('https://api.exchangeratesapi.io/latest').then(res => res.json()).then(res => {
+          console.log(res.keys);
+        });
+      }
+
+      async handleCurrencyChange() {
+        if (this.fromCurrency === this.toCurrency) {
+          this.set('exchangeRate', 1);
+        } else {
+          const apiUrl = `https://api.exchangeratesapi.io/latest?base=${this.fromCurrency}`;
+
+          const result = await fetch(apiUrl).then(res => res.json());
+
+
+          this.set('exchangeRate', result.rates[this.toCurrency]);
+        }
+
+
+        this.set('toAmount', this.get('fromAmount') * this.get('exchangeRate'))
+      }
+    }
+
+    window.customElements.define(PolymerApp.is, PolymerApp);
+  </script>
+</dom-module>

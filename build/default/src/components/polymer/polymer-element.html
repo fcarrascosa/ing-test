@@ -1,0 +1,26 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+ <script>const html = Polymer.html;
+
+class PolymerElement extends Polymer.Element {
+  static get properties() {
+    return {
+      prop1: {
+        type: String,
+        value: 'jamon'
+      }
+    };
+  }
+
+  static get is() {
+    return 'polymer-element';
+  }
+
+  static get template() {
+    return html`
+                 <p>Hello <strong>[[prop1]]</strong> I am a <em>Polymer</em> Element</p>
+            `;
+  }
+
+}
+
+customElements.define(PolymerElement.is, PolymerElement);</script>

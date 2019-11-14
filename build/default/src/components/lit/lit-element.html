@@ -1,0 +1,29 @@
+<script type="module">import { LitElement, html } from "../../../node_modules/@lion/core/index.js";
+
+class LitElementEl extends LitElement {
+  constructor(prop1) {
+    super();
+    this.prop1 = prop1 || 'jamon';
+  }
+
+  static get is() {
+    return 'lit-element';
+  }
+
+  static get properties() {
+    return {
+      prop1: {
+        type: String
+      }
+    };
+  }
+
+  render() {
+    return html`
+           <p>Hello <strong>${this.prop1}</strong> I am a <em>Lit</em> Element</p>
+       `;
+  }
+
+}
+
+customElements.define(LitElementEl.is, LitElementEl);</script>

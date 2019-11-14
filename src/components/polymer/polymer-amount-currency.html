@@ -1,0 +1,73 @@
+<link rel="import" href="../../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../../bower_components/iron-dropdown/iron-dropdown.html">
+<link rel="import" href="../../../bower_components/iron-selector/iron-selector.html">
+<script>
+    const html = Polymer.html;
+
+    class PolymerAmountCurrency extends Polymer.Element {
+        static get properties() {
+            return {
+                amount: {
+                    type: Number,
+                    value: '',
+                },
+                currency: {
+                    type: String,
+                    value: 'EUR',
+                }
+            }
+        }
+
+        static get is() {
+            return 'polymer-amount-currency';
+        }
+
+        ready() {
+            super.ready();
+        }
+
+        valueChanged() {
+            this.dispatchEvent(new CustomEvent('value-changed', {
+                detail: {
+                    amount: this.get('amount'),
+                    currency: this.get('currency')
+                }
+            }));
+        }
+
+        handleAmountChange(e) {
+            this.set('amount', e.target.value);
+            this.valueChanged()
+        }
+
+        handleCurrencyChange(e) {
+            this.set('currency', e.target.value);
+            this.valueChanged()
+        }
+
+        static get template() {
+            return html`
+                <style>
+                    :host {
+                        display: flex;
+                        width: 100%;
+                    }
+
+                </style>
+
+                <div class="amount-input">
+                    <input id="amount" name="amount"  value="[[amount]]" on-change="handleAmountChange">
+                </div>
+                <div class="amount-currency">
+                    <select id="currency" name="currency" on-change="handleCurrencyChange">
+                        <option value="EUR">EUR</option>
+                        <option value="MXN">MXN</option>
+                        <option value="USD">USD</option>
+                    </select>
+                </div>
+            `;
+        }
+    }
+
+    customElements.define(PolymerAmountCurrency.is, PolymerAmountCurrency);
+</script>

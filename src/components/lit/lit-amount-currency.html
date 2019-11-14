@@ -1,0 +1,60 @@
+<script type="module">
+ import {LitElement, html, css} from '@lion/core';
+
+ class LitAmountCurrency extends LitElement {
+
+   static get is() {return 'lit-amount-currency'}
+
+   static get properties() {
+       return {
+           amount: {
+               type: Number
+           },
+           currency: {
+               type: String,
+           }
+       }
+   }
+
+   handleCurrencyChange(e) {
+       this.currency = e.target.value;
+       this.valueChanged();
+   }
+
+ valueChanged() {
+     this.dispatchEvent(new CustomEvent('value-changed', {
+         detail: {
+             currency: this.currency,
+         }
+     }));
+ }
+
+    static get styles() {
+       return css`
+       :host {
+                        display: flex;
+                        width: 100%;
+                    }
+       `;
+    }
+
+   render() {
+       return html`
+
+
+                <div class="amount-input">
+                    <input id="amount" name="amount" value="${this.amount}" readonly>
+                </div>
+                <div class="amount-currency" @change="${this.handleCurrencyChange}">
+                    <select id="currency" name="currency">
+                        <option value="EUR">EUR</option>
+                        <option value="MXN">MXN</option>
+                        <option value="USD">USD</option>
+                    </select>
+                </div>
+            `;
+   }
+ }
+
+ customElements.define(LitAmountCurrency.is, LitAmountCurrency);
+</script>
